@@ -1,18 +1,23 @@
 name: First workflow
 on: push
 jobs:
-  static_code_analysis:
+  preconditions:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout source code
         uses: actions/checkout@v4
+      - name: Install dependencies
+        uses: npm ci
+  static_code_analysis:
+    runs-on: ubuntu-latest
+    needs: preconditions
+    steps:
       - name: Static code analysis with Lint 
         run: npm lint
   run_all_tests:
     runs-on: ubuntu-latest
+    needs: preconditions
     steps:
-      - name: Checkout source code
-        uses: actions/checkout@v4
       - name: Run all tests
         run: npm test
   build_project:
